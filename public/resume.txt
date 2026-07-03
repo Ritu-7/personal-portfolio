@@ -1,0 +1,5 @@
+# Ritika Marotha — Resume Placeholder
+
+This is a placeholder for the resume PDF. Replace `/public/resume.pdf` with the actual resume file.
+
+The download button in the Hero section and the admin dashboard both reference this path.

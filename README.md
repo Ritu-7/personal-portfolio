@@ -1,70 +1,107 @@
-# 🚀 Ritika's Personal Portfolio
-**A minimalist, high-impact showcase of modern web development and creative problem-solving.**
+# Ritika's Portfolio — Premium 2026 Edition
 
----
+A modern, full-stack personal portfolio built with React, Vite, Tailwind CSS, Framer Motion, and Supabase.
 
-## 👨‍💻 About
-This personal portfolio is a professional digital home designed to showcase my journey as a Computer Science student and aspiring Software Engineer. It highlights my technical proficiency, design sensibility, and the diverse projects I've built using modern web technologies. The site serves as a central hub for my resume, project gallery, and professional contact information.
+## Features
 
-## 🛠 Tech Stack
-![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/javascript-%23F7DF1E.svg?style=for-the-badge&logo=javascript&logoColor=black)
-![VS Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)
-![Git](https://img.shields.io/badge/git-%23F05032.svg?style=for-the-badge&logo=git&logoColor=white)
+### Frontend
+- **Modern glassmorphism UI** with a professional cyan/violet gradient palette
+- **Dark / Light mode** with system preference detection and persistence
+- **Framer Motion animations** — scroll reveals, staggered entrances, animated counters, page transitions
+- **Fully responsive** — mobile, tablet, and desktop breakpoints
+- **Accessibility (WCAG)** — semantic HTML, ARIA labels, focus-visible rings, keyboard navigation
+- **SEO optimized** — meta tags, Open Graph, Twitter cards, JSON-LD structured data, sitemap, robots.txt
+- **Code splitting** — admin route and vendor chunks lazy-loaded
 
-## ✨ Key Features
-- **Responsive Web Design**: Optimized for a seamless experience across desktops, tablets, and mobile devices.
-- **Interactive Project Gallery**: Highlighting key projects like the LMS and Netflix clone with visual previews.
-- **Smooth Navigation**: User-friendly layout with fluid scrolling and clean UI/UX components.
-- **Custom Aesthetic**: A personalized design reflecting attention to detail and modern web standards.
-- **Performance Optimized**: Lightweight structure for fast loading times and smooth interactions.
+### Sections
+1. **Hero** — animated typing roles, CTAs, social icons, resume download, profile image with floating animation
+2. **About** — career objective, interests, technologies, animated stat counters
+3. **Skills** — categorized cards (Frontend, Backend, Database, AI/ML, Tools) with animated progress bars
+4. **Experience** — interactive alternating timeline with achievements and tags
+5. **Projects** — searchable, filterable cards with detailed modal, tech badges, GitHub & demo links
+6. **Certifications** — certificate cards with organization, date, credential ID, verify link
+7. **Achievements** — coding profiles (LeetCode, GFG, GitHub, HackerRank) and awards
+8. **Contact** — validated form wired to Supabase, contact info, social links
+9. **Footer** — quick links, socials, copyright, scroll-to-top button
 
-## 🖼 Project Screenshots
+### Backend (Supabase)
+- **Contact API** — form submissions stored in `contacts` table
+- **Admin Authentication** — Supabase email/password auth with JWT sessions
+- **Content Management** — CRUD for projects, skills, experience, certifications
+- **Analytics** — tracks portfolio visits, contact requests, resume downloads
+- **Admin Dashboard** — visit `#admin` to sign in and view stats, recent messages, and content tables
+- **Row Level Security** — public read for published content, admin-only writes
 
-Explore the visual identity and core pages of the portfolio:
+## Tech Stack
+- React 18 + Vite 5
+- Tailwind CSS 3
+- Framer Motion 11
+- Supabase (Postgres + Auth)
+- React Icons
 
-![Home](assets/screenshots/home.png)
-![About](assets/screenshots/about.png)
-![Skills](assets/screenshots/skills.png)
-![Projects](assets/screenshots/projects.png)
-![Contact](assets/screenshots/conatct.png)
+## Getting Started
 
-## 📂 Project Structure
-```text
-portfolio-ritika/
-├── 📄 index.html        # Main landing page (Structure)
-├── 🎨 style.css         # Custom styling and layouts (Design)
-├── ⚡ main.js          # Interactive features and animations (Logic)
-├── 🖼️ rituimage.png     # Professional profile image
-├── 🖼️ lms.png           # Project screenshot: Learning Management System
-├── 🖼️ Netflix.png       # Project screenshot: Netflix Clone
-├── 🖼️ portfolio.png     # Project screenshot: Portfolio Preview
-└── 📁 .vscode/          # Local development configuration
+The dev server runs automatically. To build for production:
+
+```bash
+npm install
+npm run build
+npm run preview
 ```
 
-## 🚀 Getting Started
-To view this portfolio locally on your machine, follow these steps:
+## Admin Access
 
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/yourusername/portfolio-ritika.git
-   ```
-2. **Navigate to the Directory**:
-   ```bash
-   cd "portfolio ritika"
-   ```
-3. **Open the Project**:
-   - Simply double-click `index.html` to open it in your default web browser.
-   - Or, if using VS Code, use the **Live Server** extension for real-time updates.
+Navigate to `/#admin` to access the admin dashboard. On first visit, sign up with an email and password (Supabase auth). Once authenticated, you can view dashboard statistics, recent messages, and manage content via the Supabase dashboard.
 
-## 📬 Contact
-I'm always open to discussing new opportunities, internship roles, or technical collaborations!
+## Project Structure
+```
+├── index.html              # Entry HTML with SEO meta + JSON-LD
+├── public/
+│   ├── favicon.svg
+│   ├── robots.txt
+│   ├── sitemap.xml
+│   └── resume.txt          # Replace with actual resume PDF
+├── src/
+│   ├── main.jsx
+│   ├── App.jsx             # Hash-based routing (portfolio / #admin)
+│   ├── index.css           # Tailwind + design system
+│   ├── context/
+│   │   ├── ThemeContext.jsx
+│   │   ├── SupabaseContext.jsx
+│   │   └── AuthContext.jsx
+│   ├── components/
+│   │   ├── Navbar.jsx
+│   │   ├── Footer.jsx
+│   │   ├── Section.jsx
+│   │   ├── Background.jsx
+│   │   ├── ScrollToTop.jsx
+│   │   └── TypingText.jsx
+│   ├── sections/
+│   │   ├── Hero.jsx
+│   │   ├── About.jsx
+│   │   ├── Skills.jsx
+│   │   ├── Experience.jsx
+│   │   ├── Projects.jsx
+│   │   ├── Certifications.jsx
+│   │   ├── Achievements.jsx
+│   │   └── Contact.jsx
+│   ├── admin/
+│   │   ├── AdminLogin.jsx
+│   │   └── AdminDashboard.jsx
+│   └── data/
+│       └── portfolio.js    # All portfolio content
+└── portfolio ritika/       # Original static site (preserved)
+```
 
-- **GitHub**: [github.com/ritika-dev](https://github.com/yourusername)
-- **LinkedIn**: [linkedin.com/in/ritika](https://linkedin.com/in/yourusername)
-- **Email**: [ritika@dcrustm.org](mailto:ritika@dcrustm.org)
-- **Portfolio**: [Live Demo Link](https://your-live-portfolio-url.com)
+## Database Schema (Supabase)
+- `contacts` — contact form submissions
+- `projects` — portfolio projects
+- `skills` — skill groups with items
+- `experience` — career timeline
+- `certifications` — certificates
+- `analytics` — visit/download tracking
+
+All tables have RLS enabled: public read for published content, public insert for contacts/analytics, admin (authenticated) full CRUD.
 
 ---
-*Built with ❤️ by Ritika.*
+Built with React, Tailwind & Framer Motion.
