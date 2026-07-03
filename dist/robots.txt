@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ritika-portfolio.example.com/sitemap.xml
