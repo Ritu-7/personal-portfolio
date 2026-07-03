@@ -6,6 +6,7 @@ import About from './sections/About.jsx'
 import Skills from './sections/Skills.jsx'
 import Experience from './sections/Experience.jsx'
 import Projects from './sections/Projects.jsx'
+import Education from './sections/Education.jsx'
 import Certifications from './sections/Certifications.jsx'
 import Achievements from './sections/Achievements.jsx'
 import Contact from './sections/Contact.jsx'
@@ -79,6 +80,7 @@ function Portfolio() {
         <Skills />
         <Experience />
         <Projects />
+        <Education />
         <Certifications />
         <Achievements />
         <Contact />
