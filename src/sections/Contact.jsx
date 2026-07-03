@@ -4,6 +4,7 @@ import { FaGithub, FaLinkedinIn, FaWhatsapp } from 'react-icons/fa'
 import { HiOutlineEnvelope, HiOutlinePhone, HiOutlineMapPin, HiOutlinePaperAirplane, HiOutlineCheckCircle, HiOutlineExclamationCircle } from 'react-icons/hi2'
 import Section from '../components/Section.jsx'
 import { supabase } from '../context/SupabaseContext.jsx'
+import { useToast } from '../components/Toast.jsx'
 import { profile } from '../data/portfolio.js'
 
 const contactItems = [
@@ -12,17 +13,76 @@ const contactItems = [
   { icon: HiOutlineMapPin, label: 'Location', value: profile.location, href: '#' },
 ]
 
-export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
-  const [status, setStatus] = useState('idle')
-  const [error, setError] = useState('')
+function Field({ name, type = 'text', label, value, onChange, error, textarea, required }) {
+  return (
+    <div className="relative">
+      {textarea ? (
+        <textarea
+          name={name}
+          value={value}
+          onChange={onChange}
+          required={required}
+          placeholder=" "
+          rows={5}
+          className={`input peer resize-none ${error ? 'ring-rose-400/60' : ''}`}
+        />
+      ) : (
+        <input
+          type={type}
+          name={name}
+          value={value}
+          onChange={onChange}
+          required={required}
+          placeholder=" "
+          className={`input peer ${error ? 'ring-rose-400/60' : ''}`}
+        />
+      )}
+      <label className="input-label peer-focus:text-brand-400">{label}{required && ' *'}</label>
+      <AnimatePresence>
+        {error && (
+          <motion.p
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            className="mt-1 flex items-center gap-1 text-xs text-rose-400"
+          >
+            <HiOutlineExclamationCircle /> {error}
+          </motion.p>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
 
-  const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
+export default function Contact() {
+  const toast = useToast()
+  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
+  const [errors, setErrors] = useState({})
+  const [loading, setLoading] = useState(false)
+
+  const validate = () => {
+    const e = {}
+    if (!form.name.trim()) e.name = 'Name is required'
+    if (!form.email.trim()) e.email = 'Email is required'
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Enter a valid email'
+    if (!form.message.trim()) e.message = 'Message is required'
+    else if (form.message.trim().length < 10) e.message = 'Message must be at least 10 characters'
+    setErrors(e)
+    return Object.keys(e).length === 0
+  }
+
+  const handleChange = (e) => {
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
+    if (errors[e.target.name]) setErrors((er) => ({ ...er, [e.target.name]: '' }))
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setStatus('loading')
-    setError('')
+    if (!validate()) {
+      toast('Please fix the errors in the form', 'error')
+      return
+    }
+    setLoading(true)
     try {
       const { error: dbError } = await supabase.from('contacts').insert({
         name: form.name,
@@ -31,12 +91,12 @@ export default function Contact() {
         message: form.message,
       })
       if (dbError) throw dbError
-      setStatus('success')
+      toast('Message sent successfully! I will get back to you soon.', 'success')
       setForm({ name: '', email: '', subject: '', message: '' })
-      setTimeout(() => setStatus('idle'), 5000)
     } catch (err) {
-      setError(err.message || 'Something went wrong. Please try again.')
-      setStatus('error')
+      toast(err.message || 'Something went wrong. Please try again.', 'error')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -65,9 +125,9 @@ export default function Contact() {
                 <a
                   key={c.label}
                   href={c.href}
-                  className="flex items-center gap-3 rounded-xl glass-soft p-3 transition hover:-translate-y-0.5 hover:border-brand-400/60"
+                  className="group flex items-center gap-3 rounded-xl glass-soft p-3 transition hover:-translate-y-0.5 hover:border-brand-400/60 hover:shadow-glow"
                 >
-                  <div className="grid h-11 w-11 place-items-center rounded-lg bg-gradient-to-br from-brand-400 to-accent-400 text-slate-900">
+                  <div className="grid h-11 w-11 place-items-center rounded-lg bg-gradient-to-br from-brand-400 to-accent-400 text-slate-900 transition group-hover:scale-110">
                     <c.icon className="text-lg" />
                   </div>
                   <div>
@@ -89,7 +149,7 @@ export default function Contact() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={s.label}
-                  className="grid h-11 w-11 place-items-center rounded-full glass-soft text-lg text-[rgb(var(--text-soft))] hover:text-brand-400 hover:-translate-y-1 transition"
+                  className="grid h-11 w-11 place-items-center rounded-full glass-soft text-lg text-[rgb(var(--text-soft))] hover:text-brand-400 hover:-translate-y-1 hover:shadow-glow active:scale-90 transition"
                 >
                   {s.icon}
                 </a>
@@ -100,63 +160,34 @@ export default function Contact() {
 
         <motion.form
           onSubmit={handleSubmit}
+          noValidate
           initial={{ opacity: 0, x: 24 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.6 }}
-          className="card"
+          className="card space-y-4"
         >
           <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label className="mb-1.5 block text-xs font-medium text-[rgb(var(--text-soft))]">Name</label>
-              <input name="name" value={form.name} onChange={handleChange} required placeholder="Your name" className="input" />
-            </div>
-            <div>
-              <label className="mb-1.5 block text-xs font-medium text-[rgb(var(--text-soft))]">Email</label>
-              <input type="email" name="email" value={form.email} onChange={handleChange} required placeholder="you@example.com" className="input" />
-            </div>
+            <Field name="name" label="Your Name" value={form.name} onChange={handleChange} error={errors.name} required />
+            <Field name="email" type="email" label="Your Email" value={form.email} onChange={handleChange} error={errors.email} required />
           </div>
-          <div className="mt-4">
-            <label className="mb-1.5 block text-xs font-medium text-[rgb(var(--text-soft))]">Subject</label>
-            <input name="subject" value={form.subject} onChange={handleChange} placeholder="What's this about?" className="input" />
-          </div>
-          <div className="mt-4">
-            <label className="mb-1.5 block text-xs font-medium text-[rgb(var(--text-soft))]">Message</label>
-            <textarea name="message" value={form.message} onChange={handleChange} required rows={5} placeholder="Tell me about your project..." className="input resize-none" />
-          </div>
+          <Field name="subject" label="Subject" value={form.subject} onChange={handleChange} error={errors.subject} />
+          <Field name="message" label="Your Message" value={form.message} onChange={handleChange} error={errors.message} textarea required />
 
           <button
             type="submit"
-            disabled={status === 'loading'}
-            className="mt-6 btn-primary w-full disabled:opacity-60 disabled:cursor-not-allowed"
+            disabled={loading}
+            className="btn-primary w-full disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {status === 'loading' ? 'Sending...' : (
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-900/30 border-t-slate-900" />
+                Sending...
+              </span>
+            ) : (
               <>Send Message <HiOutlinePaperAirplane /></>
             )}
           </button>
-
-          <AnimatePresence>
-            {status === 'success' && (
-              <motion.p
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="mt-4 flex items-center gap-2 rounded-xl bg-emerald-400/10 p-3 text-sm text-emerald-500"
-              >
-                <HiOutlineCheckCircle /> Thanks! Your message has been sent.
-              </motion.p>
-            )}
-            {status === 'error' && (
-              <motion.p
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="mt-4 flex items-center gap-2 rounded-xl bg-rose-400/10 p-3 text-sm text-rose-500"
-              >
-                <HiOutlineExclamationCircle /> {error}
-              </motion.p>
-            )}
-          </AnimatePresence>
         </motion.form>
       </div>
     </Section>

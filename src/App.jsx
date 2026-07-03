@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { lazy, Suspense } from 'react'
 import Navbar from './components/Navbar.jsx'
 import Hero from './sections/Hero.jsx'
 import About from './sections/About.jsx'
@@ -11,16 +12,19 @@ import Contact from './sections/Contact.jsx'
 import Footer from './components/Footer.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
 import Background from './components/Background.jsx'
-import { lazy, Suspense } from 'react'
+import PageLoader from './components/PageLoader.jsx'
+import MouseGlow from './components/MouseGlow.jsx'
+import { ScrollProgress } from './components/Motion.jsx'
+import { ToastProvider } from './components/Toast.jsx'
 import { AuthProvider, useAuth } from './context/AuthContext.jsx'
+import { supabase } from './context/SupabaseContext.jsx'
 
 const AdminLogin = lazy(() => import('./admin/AdminLogin.jsx'))
 const AdminDashboard = lazy(() => import('./admin/AdminDashboard.jsx'))
-import { supabase } from './context/SupabaseContext.jsx'
 
 function AdminRoute() {
   const { session, loading } = useAuth()
-  const [route, setRoute] = useState(window.location.hash)
+  const [, setRoute] = useState(window.location.hash)
 
   useEffect(() => {
     const onHash = () => setRoute(window.location.hash)
@@ -49,18 +53,25 @@ function AdminShell() {
 }
 
 function Portfolio() {
+  const [loading, setLoading] = useState(true)
+
   useEffect(() => {
-    (async () => {
+    const t = setTimeout(() => setLoading(false), 900)
+    ;(async () => {
       await supabase.from('analytics').insert({
         event_type: 'visit',
         path: window.location.pathname,
       })
     })()
+    return () => clearTimeout(t)
   }, [])
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
+      <PageLoader loading={loading} />
       <Background />
+      <MouseGlow />
+      <ScrollProgress />
       <Navbar />
       <main className="relative z-10">
         <Hero />
@@ -98,5 +109,9 @@ export default function App() {
     )
   }
 
-  return <Portfolio />
+  return (
+    <ToastProvider>
+      <Portfolio />
+    </ToastProvider>
+  )
 }

@@ -1,22 +1,28 @@
 import { useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useMotionValueEvent, useScroll } from 'framer-motion'
 import { HiOutlineMoon, HiOutlineSun } from 'react-icons/hi'
 import { HiOutlineBars3, HiOutlineXMark } from 'react-icons/hi2'
 import { useTheme } from '../context/ThemeContext.jsx'
 import { navLinks, profile } from '../data/portfolio.js'
+import { Magnetic } from './Motion.jsx'
 
 export default function Navbar() {
   const { theme, toggle } = useTheme()
   const [scrolled, setScrolled] = useState(false)
+  const [hidden, setHidden] = useState(false)
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState('#home')
+  const { scrollY } = useScroll()
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  useMotionValueEvent(scrollY, 'change', (latest) => {
+    const prev = scrollY.getPrevious() ?? 0
+    setScrolled(latest > 20)
+    if (latest > prev && latest > 200 && !open) {
+      setHidden(true)
+    } else {
+      setHidden(false)
+    }
+  })
 
   useEffect(() => {
     const sections = navLinks.map((l) => document.querySelector(l.href)).filter(Boolean)
@@ -35,16 +41,16 @@ export default function Navbar() {
   return (
     <motion.header
       initial={{ y: -80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
+      animate={{ y: hidden ? -100 : 0, opacity: 1 }}
+      transition={{ duration: 0.4, ease: 'easeInOut' }}
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled ? 'glass shadow-lg shadow-black/5' : 'bg-transparent'
+        scrolled ? 'glass shadow-soft' : 'bg-transparent'
       }`}
     >
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 sm:px-8 py-4">
-        <a href="#home" className="font-display text-lg font-extrabold tracking-tight">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 sm:px-8 py-3.5">
+        <a href="#home" className="group font-display text-lg font-extrabold tracking-tight">
           <span className="gradient-text">{profile.firstName}</span>
-          <span className="text-[rgb(var(--text-soft))]">.dev</span>
+          <span className="text-[rgb(var(--text-soft))] transition group-hover:text-brand-400">.dev</span>
         </a>
 
         <ul className="hidden lg:flex items-center gap-1">
@@ -75,15 +81,15 @@ export default function Navbar() {
           <button
             onClick={toggle}
             aria-label="Toggle theme"
-            className="grid h-10 w-10 place-items-center rounded-full glass-soft transition hover:-translate-y-0.5 hover:border-brand-400/60"
+            className="grid h-10 w-10 place-items-center rounded-full glass-soft transition hover:-translate-y-0.5 hover:border-brand-400/60 active:scale-90"
           >
             <AnimatePresence mode="wait" initial={false}>
               <motion.span
                 key={theme}
-                initial={{ rotate: -90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: 90, opacity: 0 }}
-                transition={{ duration: 0.25 }}
+                initial={{ rotate: -90, opacity: 0, scale: 0.5 }}
+                animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                exit={{ rotate: 90, opacity: 0, scale: 0.5 }}
+                transition={{ duration: 0.3 }}
                 className="text-lg text-[rgb(var(--text))]"
               >
                 {theme === 'dark' ? <HiOutlineSun /> : <HiOutlineMoon />}
@@ -91,14 +97,17 @@ export default function Navbar() {
             </AnimatePresence>
           </button>
 
-          <a href="#contact" className="hidden sm:inline-flex btn-primary !px-5 !py-2.5">
-            Hire Me
-          </a>
+          <Magnetic strength={0.4} className="hidden sm:block">
+            <a href="#contact" className="btn-primary !px-5 !py-2.5">
+              Hire Me
+            </a>
+          </Magnetic>
 
           <button
             onClick={() => setOpen((o) => !o)}
             aria-label="Menu"
-            className="lg:hidden grid h-10 w-10 place-items-center rounded-full glass-soft text-xl text-[rgb(var(--text))]"
+            aria-expanded={open}
+            className="lg:hidden grid h-10 w-10 place-items-center rounded-full glass-soft text-xl text-[rgb(var(--text))] active:scale-90 transition"
           >
             {open ? <HiOutlineXMark /> : <HiOutlineBars3 />}
           </button>
@@ -115,8 +124,13 @@ export default function Navbar() {
             className="lg:hidden overflow-hidden glass border-t border-[rgb(var(--border))]"
           >
             <ul className="flex flex-col gap-1 px-5 py-4">
-              {navLinks.map((l) => (
-                <li key={l.href}>
+              {navLinks.map((l, i) => (
+                <motion.li
+                  key={l.href}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                >
                   <a
                     href={l.href}
                     onClick={() => setOpen(false)}
@@ -128,7 +142,7 @@ export default function Navbar() {
                   >
                     {l.label}
                   </a>
-                </li>
+                </motion.li>
               ))}
             </ul>
           </motion.div>

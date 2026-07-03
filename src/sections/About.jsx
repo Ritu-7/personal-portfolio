@@ -1,13 +1,14 @@
 import { motion } from 'framer-motion'
 import { HiOutlineMapPin, HiOutlineBriefcase, HiOutlineSparkles } from 'react-icons/hi2'
 import Section from '../components/Section.jsx'
+import { Counter } from '../components/Motion.jsx'
 import { about, profile } from '../data/portfolio.js'
 
 const stats = [
-  { label: 'Years Coding', value: '3+' },
-  { label: 'Projects Built', value: '15+' },
-  { label: 'Technologies', value: '20+' },
-  { label: 'Open Source PRs', value: '8+' },
+  { label: 'Years Coding', value: 3, suffix: '+' },
+  { label: 'Projects Built', value: 15, suffix: '+' },
+  { label: 'Technologies', value: 20, suffix: '+' },
+  { label: 'Open Source PRs', value: 8, suffix: '+' },
 ]
 
 export default function About() {
@@ -84,7 +85,9 @@ export default function About() {
                 transition={{ duration: 0.4, delay: i * 0.08 }}
                 className="card text-center"
               >
-                <p className="font-display text-3xl font-extrabold gradient-text">{s.value}</p>
+                <p className="font-display text-3xl font-extrabold gradient-text">
+                  <Counter value={s.value} suffix={s.suffix} />
+                </p>
                 <p className="mt-1 text-xs text-[rgb(var(--text-soft))]">{s.label}</p>
               </motion.div>
             ))}

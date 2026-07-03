@@ -1,4 +1,6 @@
+import { motion } from 'framer-motion'
 import { FaGithub, FaLinkedinIn, FaWhatsapp } from 'react-icons/fa'
+import { HiArrowUp } from 'react-icons/hi2'
 import { navLinks, profile } from '../data/portfolio.js'
 
 export default function Footer() {
@@ -24,7 +26,7 @@ export default function Footer() {
                 <li key={l.href}>
                   <a
                     href={l.href}
-                    className="text-sm text-[rgb(var(--text-soft))] hover:text-brand-400 transition"
+                    className="link-underline text-sm text-[rgb(var(--text-soft))] hover:text-brand-400 transition"
                   >
                     {l.label}
                   </a>
@@ -38,15 +40,24 @@ export default function Footer() {
             <p className="mt-4 text-sm text-[rgb(var(--text-soft))]">{profile.email}</p>
             <p className="text-sm text-[rgb(var(--text-soft))]">{profile.phone}</p>
             <div className="mt-4 flex gap-3">
-              <a href={profile.socials.github} aria-label="GitHub" target="_blank" rel="noreferrer" className="grid h-10 w-10 place-items-center rounded-full glass-soft text-[rgb(var(--text-soft))] hover:text-brand-400 hover:-translate-y-0.5 transition">
-                <FaGithub />
-              </a>
-              <a href={profile.socials.linkedin} aria-label="LinkedIn" target="_blank" rel="noreferrer" className="grid h-10 w-10 place-items-center rounded-full glass-soft text-[rgb(var(--text-soft))] hover:text-brand-400 hover:-translate-y-0.5 transition">
-                <FaLinkedinIn />
-              </a>
-              <a href={profile.socials.whatsapp} aria-label="WhatsApp" target="_blank" rel="noreferrer" className="grid h-10 w-10 place-items-center rounded-full glass-soft text-[rgb(var(--text-soft))] hover:text-brand-400 hover:-translate-y-0.5 transition">
-                <FaWhatsapp />
-              </a>
+              {[
+                { href: profile.socials.github, icon: <FaGithub />, label: 'GitHub' },
+                { href: profile.socials.linkedin, icon: <FaLinkedinIn />, label: 'LinkedIn' },
+                { href: profile.socials.whatsapp, icon: <FaWhatsapp />, label: 'WhatsApp' },
+              ].map((s) => (
+                <motion.a
+                  key={s.label}
+                  href={s.href}
+                  aria-label={s.label}
+                  target="_blank"
+                  rel="noreferrer"
+                  whileHover={{ y: -4 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="grid h-10 w-10 place-items-center rounded-full glass-soft text-[rgb(var(--text-soft))] hover:text-brand-400 hover:shadow-glow transition"
+                >
+                  {s.icon}
+                </motion.a>
+              ))}
             </div>
           </div>
         </div>
@@ -55,9 +66,20 @@ export default function Footer() {
           <p className="text-xs text-[rgb(var(--text-soft))]">
             © {year} {profile.name}. All rights reserved.
           </p>
-          <p className="text-xs text-[rgb(var(--text-soft))]">
-            Built with React, Tailwind & Framer Motion.
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-xs text-[rgb(var(--text-soft))]">
+              Built with React, Tailwind & Framer Motion.
+            </p>
+            <motion.button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              whileHover={{ y: -3 }}
+              whileTap={{ scale: 0.9 }}
+              aria-label="Back to top"
+              className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-brand-400 to-accent-400 text-slate-900 shadow-soft"
+            >
+              <HiArrowUp />
+            </motion.button>
+          </div>
         </div>
       </div>
     </footer>
