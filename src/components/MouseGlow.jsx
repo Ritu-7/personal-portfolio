@@ -7,6 +7,7 @@ export default function MouseGlow() {
   const sx = useSpring(x, { stiffness: 60, damping: 20, mass: 0.5 })
   const sy = useSpring(y, { stiffness: 60, damping: 20, mass: 0.5 })
   const [enabled, setEnabled] = useState(false)
+  const [hovering, setHovering] = useState(false)
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
@@ -15,6 +16,9 @@ export default function MouseGlow() {
     const onMove = (e) => {
       x.set(e.clientX - 300)
       y.set(e.clientY - 300)
+      const target = e.target
+      const interactive = target.closest('a, button, input, textarea, [role="button"]')
+      setHovering(!!interactive)
     }
     window.addEventListener('mousemove', onMove)
     return () => window.removeEventListener('mousemove', onMove)
@@ -24,12 +28,16 @@ export default function MouseGlow() {
 
   return (
     <motion.div
-      className="pointer-events-none fixed z-0 h-[600px] w-[600px] rounded-full"
+      className="pointer-events-none fixed z-0 rounded-full"
       style={{
         x: sx,
         y: sy,
+        width: 600,
+        height: 600,
         background: 'radial-gradient(circle, rgba(34,211,238,0.08), transparent 60%)',
       }}
+      animate={{ scale: hovering ? 1.3 : 1 }}
+      transition={{ duration: 0.3 }}
     />
   )
 }

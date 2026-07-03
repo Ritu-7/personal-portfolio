@@ -155,12 +155,24 @@ export const experience = [
   },
 ]
 
+const px = (id) => `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=900`
+
 export const projects = [
   {
     title: 'LMS Platform',
     category: 'Full Stack',
-    image:
-      'https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg?auto=compress&cs=tinysrgb&w=800',
+    status: 'Deployed',
+    timeline: '3 weeks',
+    difficulty: 'Advanced',
+    image: px(5212345),
+    gallery: [
+      { label: 'Dashboard', src: px(5212345) },
+      { label: 'Course View', src: px(5212703) },
+      { label: 'Login', src: px(5212659) },
+      { label: 'Mobile', src: px(4144923) },
+      { label: 'Analytics', src: px(7681098) },
+      { label: 'Admin Panel', src: px(3184292) },
+    ],
     description:
       'A multi-role Learning Management System with secure authentication (Clerk), role-based access control, Google Gemini AI-powered Q&A, and Razorpay payment webhooks. Deployed on Vercel.',
     features: [
@@ -177,8 +189,17 @@ export const projects = [
   {
     title: 'Blueprint.ai — AI Website Builder',
     category: 'Gen AI',
-    image:
-      'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=800',
+    status: 'In Progress',
+    timeline: '4 weeks',
+    difficulty: 'Advanced',
+    image: px(3861969),
+    gallery: [
+      { label: 'Prompt Input', src: px(3861969) },
+      { label: 'Generated UI', src: px(1966444) },
+      { label: 'Preview', src: px(3184465) },
+      { label: 'Code Refinement', src: px(270557) },
+      { label: 'Mobile Output', src: px(4144923) },
+    ],
     description:
       'An AI-driven platform that generates functional website structures and layouts from natural language prompts. Features a dynamic UI generation engine and a real-time preview dashboard.',
     features: [
@@ -195,7 +216,16 @@ export const projects = [
   {
     title: 'Entertainment Platform (OTT Clone)',
     category: 'Full Stack',
+    status: 'Deployed',
+    timeline: '2 weeks',
+    difficulty: 'Intermediate',
     image: '/portfolio ritika/Netflix.png',
+    gallery: [
+      { label: 'Home', src: '/portfolio ritika/Netflix.png' },
+      { label: 'Browse', src: px(2873490) },
+      { label: 'Player', src: px(2873488) },
+      { label: 'Mobile', src: px(4144923) },
+    ],
     description:
       'A subscription-based OTT streaming platform for movies, TV shows, and original content on-demand across devices, with secure auth and payment integration.',
     features: [
@@ -212,7 +242,16 @@ export const projects = [
   {
     title: 'Portfolio Website',
     category: 'Frontend',
+    status: 'Deployed',
+    timeline: '1 week',
+    difficulty: 'Intermediate',
     image: '/portfolio ritika/portfolio.png',
+    gallery: [
+      { label: 'Hero', src: '/portfolio ritika/portfolio.png' },
+      { label: 'Projects', src: px(1966444) },
+      { label: 'Admin', src: px(3184292) },
+      { label: 'Mobile', src: px(4144923) },
+    ],
     description:
       'A premium personal portfolio showcasing skills, projects, and experience with glassmorphism design, Framer Motion animations, Supabase backend, and admin dashboard.',
     features: [

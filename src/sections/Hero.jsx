@@ -1,6 +1,7 @@
-import { useMemo } from 'react'
-import { motion } from 'framer-motion'
-import { FaGithub, FaLinkedinIn, FaWhatsapp } from 'react-icons/fa'
+import { useMemo, useRef } from 'react'
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { FaGithub, FaLinkedinIn, FaWhatsapp, FaReact, FaNodeJs, FaPython } from 'react-icons/fa'
+import { SiJavascript, SiMongodb, SiTailwindcss } from 'react-icons/si'
 import { HiOutlineDocumentArrowDown, HiOutlineArrowDown } from 'react-icons/hi2'
 import TypingText from '../components/TypingText.jsx'
 import { Magnetic, Counter } from '../components/Motion.jsx'
@@ -9,23 +10,32 @@ import { profile } from '../data/portfolio.js'
 
 const container = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.3 } },
 }
 const item = {
   hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
 }
 
 const stats = [
-  { value: 15, suffix: '+', label: 'Projects' },
-  { value: 3, suffix: '+', label: 'Years Coding' },
+  { value: 350, suffix: '+', label: 'DSA Problems' },
+  { value: 4, suffix: '', label: 'Projects' },
   { value: 20, suffix: '+', label: 'Technologies' },
+]
+
+const techLogos = [
+  { Icon: FaReact, color: 'text-cyan-400', delay: 0 },
+  { Icon: FaNodeJs, color: 'text-emerald-400', delay: 0.5 },
+  { Icon: SiJavascript, color: 'text-amber-400', delay: 1 },
+  { Icon: SiMongodb, color: 'text-green-500', delay: 1.5 },
+  { Icon: SiTailwindcss, color: 'text-sky-400', delay: 2 },
+  { Icon: FaPython, color: 'text-blue-400', delay: 2.5 },
 ]
 
 function Particles() {
   const dots = useMemo(
     () =>
-      Array.from({ length: 18 }).map(() => ({
+      Array.from({ length: 24 }).map(() => ({
         x: Math.random() * 100,
         y: Math.random() * 100,
         size: Math.random() * 4 + 2,
@@ -50,8 +60,28 @@ function Particles() {
 }
 
 export default function Hero() {
+  const mx = useMotionValue(0)
+  const my = useMotionValue(0)
+  const sx = useSpring(mx, { stiffness: 50, damping: 20 })
+  const sy = useSpring(my, { stiffness: 50, damping: 20 })
+  const imgX = useTransform(sx, [-0.5, 0.5], [-15, 15])
+  const imgY = useTransform(sy, [-0.5, 0.5], [-15, 15])
+  const ref = useRef(null)
+
+  const onMouseMove = (e) => {
+    const rect = ref.current?.getBoundingClientRect()
+    if (!rect) return
+    mx.set((e.clientX - rect.left) / rect.width - 0.5)
+    my.set((e.clientY - rect.top) / rect.height - 0.5)
+  }
+
   return (
-    <section id="home" className="relative min-h-screen scroll-mt-20 pt-28 pb-16">
+    <section
+      id="home"
+      ref={ref}
+      onMouseMove={onMouseMove}
+      className="relative min-h-screen scroll-mt-20 pt-28 pb-16"
+    >
       <Particles />
       {/* Floating geometric shapes */}
       <motion.div
@@ -64,11 +94,30 @@ export default function Hero() {
         animate={{ y: [0, 25, 0], x: [0, 15, 0] }}
         transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
       />
-      <motion.div
-        className="pointer-events-none absolute top-1/2 left-[40%] h-3 w-3 rounded-full bg-accent-400/40"
-        animate={{ scale: [1, 1.6, 1], opacity: [0.4, 0.8, 0.4] }}
-        transition={{ duration: 4, repeat: Infinity }}
-      />
+
+      {/* Floating tech logos */}
+      {techLogos.map(({ Icon, color, delay }, i) => {
+        const positions = [
+          { top: '15%', left: '8%' },
+          { top: '22%', left: '88%' },
+          { top: '70%', left: '5%' },
+          { top: '78%', left: '92%' },
+          { top: '45%', left: '3%' },
+          { top: '50%', left: '94%' },
+        ]
+        const pos = positions[i]
+        return (
+          <motion.div
+            key={i}
+            className={`pointer-events-none absolute hidden lg:block ${color} opacity-20`}
+            style={{ top: pos.top, left: pos.left }}
+            animate={{ y: [0, -20, 0], opacity: [0.1, 0.3, 0.1] }}
+            transition={{ duration: 5 + i, delay, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <Icon className="text-4xl" />
+          </motion.div>
+        )
+      })}
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-[1.15fr_0.85fr]">
         <motion.div variants={container} initial="hidden" animate="show">
@@ -81,7 +130,16 @@ export default function Hero() {
           </motion.span>
 
           <motion.h1 variants={item} className="font-display font-extrabold leading-[1.05] tracking-tight text-balance">
-            Hi, I'm <span className="gradient-text animate-gradient-x">{profile.name}</span>
+            Hi, I'm{' '}
+            <span className="relative inline-block">
+              <span className="gradient-text animate-gradient-x">{profile.name}</span>
+              <motion.span
+                className="absolute -bottom-1 left-0 h-1 rounded-full bg-gradient-to-r from-brand-400 to-accent-400"
+                initial={{ width: 0 }}
+                animate={{ width: '100%' }}
+                transition={{ delay: 0.8, duration: 0.8, ease: 'easeOut' }}
+              />
+            </span>
           </motion.h1>
 
           <motion.p variants={item} className="mt-4 font-mono text-lg text-[rgb(var(--text-soft))] sm:text-xl">
@@ -152,6 +210,7 @@ export default function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           className="relative mx-auto w-full max-w-sm"
+          style={{ x: imgX, y: imgY }}
         >
           <motion.div
             className="absolute -inset-6 rounded-[2.5rem] bg-gradient-to-tr from-brand-400/30 via-accent-400/20 to-transparent blur-2xl"
@@ -159,7 +218,7 @@ export default function Hero() {
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
           />
           <motion.div
-            className="relative aspect-square overflow-hidden rounded-[2rem] glass p-2 shadow-glow"
+            className="relative aspect-square overflow-hidden rounded-[2rem] gradient-border p-2 shadow-glow"
             animate={{ y: [0, -12, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
           >
@@ -178,7 +237,7 @@ export default function Hero() {
                 <p className="text-sm font-semibold">{profile.location}</p>
               </div>
               <div className="flex -space-x-2">
-                {['React', 'Node', 'UI'].map((t) => (
+                {['React', 'Node', 'AI'].map((t) => (
                   <span key={t} className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-brand-400 to-accent-400 text-[10px] font-bold text-slate-900 ring-2 ring-[rgb(var(--surface))]">
                     {t}
                   </span>

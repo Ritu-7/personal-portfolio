@@ -171,6 +171,24 @@
     box-shadow: 0 0 40px -8px rgb(var(--brand) / 0.35);
   }
 
+  .gradient-border {
+    position: relative;
+    background: rgb(var(--surface) / 0.7);
+    backdrop-filter: blur(16px);
+  }
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgb(var(--brand) / 0.5), transparent 40%, rgb(var(--accent) / 0.5));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
   .animate-gradient-x {
     background-size: 200% 200%;
     animation: gradient-x 6s ease infinite;

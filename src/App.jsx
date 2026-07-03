@@ -15,6 +15,7 @@ import ScrollToTop from './components/ScrollToTop.jsx'
 import Background from './components/Background.jsx'
 import PageLoader from './components/PageLoader.jsx'
 import MouseGlow from './components/MouseGlow.jsx'
+import SectionDivider from './components/SectionDivider.jsx'
 import { ScrollProgress } from './components/Motion.jsx'
 import { ToastProvider } from './components/Toast.jsx'
 import { AuthProvider, useAuth } from './context/AuthContext.jsx'
@@ -76,13 +77,21 @@ function Portfolio() {
       <Navbar />
       <main className="relative z-10">
         <Hero />
+        <SectionDivider />
         <About />
+        <SectionDivider />
         <Skills />
+        <SectionDivider />
         <Experience />
+        <SectionDivider />
         <Projects />
+        <SectionDivider />
         <Education />
+        <SectionDivider />
         <Certifications />
+        <SectionDivider />
         <Achievements />
+        <SectionDivider />
         <Contact />
       </main>
       <Footer />
