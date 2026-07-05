@@ -65,6 +65,7 @@ const schemas = {
       { key: 'date', label: 'Date', type: 'text', required: true },
       { key: 'credential_id', label: 'Credential ID', type: 'text' },
       { key: 'verify_url', label: 'Verify URL', type: 'text' },
+      { key: 'pdf_url', label: 'PDF URL (path to /public file)', type: 'text' },
       { key: 'published', label: 'Published', type: 'boolean' },
       { key: 'sort_order', label: 'Sort Order', type: 'number' },
     ],

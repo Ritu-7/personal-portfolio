@@ -275,6 +275,30 @@ export const certifications = [
     credentialId: 'AICTE-AI-AZURE-2025',
     verifyUrl: 'https://edunetfoundation.org/',
   },
+  {
+    title: 'Certificate of Completion',
+    org: 'Unknown',
+    date: 'Unknown',
+    pdfUrl: '/certificate_(3).pdf',
+  },
+  {
+    title: 'Future Bytes',
+    org: 'Unknown',
+    date: 'Unknown',
+    pdfUrl: '/Future_Bytes.pdf',
+  },
+  {
+    title: 'Student Certificate',
+    org: 'Unknown',
+    date: 'Unknown',
+    pdfUrl: '/STU67ebf5261fc411743516966_(1).pdf',
+  },
+  {
+    title: 'Tata Crucible Prelims — Level 1',
+    org: 'Tata Group',
+    date: 'Unknown',
+    pdfUrl: '/Tata_Cruible_Prelims_Level1.pdf',
+  },
 ]
 
 export const achievements = {
