@@ -70,6 +70,13 @@ export default function Footer() {
             <p className="text-xs text-[rgb(var(--text-soft))]">
               Built with React, Tailwind & Framer Motion.
             </p>
+            <a
+              href="#admin"
+              aria-label="Admin"
+              className="text-xs text-[rgb(var(--text-soft))] opacity-30 transition hover:opacity-100 hover:text-brand-400"
+            >
+              Admin
+            </a>
             <motion.button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               whileHover={{ y: -3 }}
